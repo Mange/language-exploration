@@ -9,4 +9,5 @@ fi
 port=$1
 
 curl -H "Accept: text/plain" http://localhost:${port}/api/current-time
+echo ""
 curl -H "Accept: application/json" http://localhost:${port}/api/current-time

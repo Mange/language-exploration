@@ -6,8 +6,8 @@ set :port, ENV.fetch("PORT", 3000)
 
 get "/api/current-time", provides: "text" do
   time = Time.now
-  body = (time.min > 30 ? "half past #{time.hour}" : "#{time.hour} O'clock")
-  [200, [body, "\n".freeze]]
+  body = (time.min >= 30 ? "half past #{time.hour}" : "#{time.hour} O'clock")
+  [200, [body]]
 end
 
 get "/api/current-time", provides: "json" do
@@ -17,9 +17,9 @@ get "/api/current-time", provides: "json" do
     fullstamp: time.to_f,
     string: time.iso8601,
   }
-  [200, [body.to_json, "\n"]]
+  [200, [body.to_json]]
 end
 
 get "*" do
-  [404, ["Not Found\n".freeze]]
+  [404, ["Not Found".freeze]]
 end
