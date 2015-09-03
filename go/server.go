@@ -11,35 +11,6 @@ import (
 	"time"
 )
 
-type TimeStruct struct {
-	Stamp     int64   `json:"stamp"`
-	Fullstamp float64 `json:"fullstamp"`
-	String    string  `json:"string"`
-}
-
-func currentTimeText(time time.Time) string {
-	if time.Minute() >= 30 {
-		return fmt.Sprintf("half past %d", time.Hour())
-	} else {
-		return fmt.Sprintf("%d O'clock", time.Hour())
-	}
-}
-
-func currentTimeJson(currentTime time.Time) string {
-	payload := TimeStruct{
-		Stamp:     currentTime.Unix(),
-		Fullstamp: (float64(currentTime.UnixNano()) / 1.0E9),
-		String:    currentTime.Format(time.RFC3339),
-	}
-
-	body, err := json.Marshal(payload)
-	if err != nil {
-		log.Panic(err)
-	}
-
-	return string(body)
-}
-
 const (
 	Text = "text/plain"
 	JSON = "application/json"
@@ -65,22 +36,65 @@ func negotiate(accept string, fallback string) string {
 	return fallback
 }
 
-func currentTime(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
-	currentTime := time.Now()
+func currentTimeApi(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	accepted := negotiate(r.Header.Get("Accept"), Text)
 
 	if accepted == JSON {
-		w.Header().Set("Content-Type", "application/json; coding=utf-8")
-		fmt.Fprintf(w, currentTimeJson(currentTime))
+		currentTimeApiJson(w, r, p)
 	} else {
-		w.Header().Set("Content-Type", "text/plain; coding=utf-8")
-		fmt.Fprintf(w, currentTimeText(currentTime))
+		currentTimeApiText(w, r, p)
 	}
+}
+
+func currentTimeApiText(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
+	currentTime := time.Now()
+
+	w.Header().Set("Content-Type", "text/plain; coding=utf-8")
+	fmt.Fprintf(w, currentTimeText(currentTime))
+}
+
+func currentTimeApiJson(w http.ResponseWriter, _ *http.Request, _ httprouter.Params) {
+	currentTime := time.Now()
+
+	w.Header().Set("Content-Type", "application/json; coding=utf-8")
+	fmt.Fprintf(w, currentTimeJson(currentTime))
+}
+
+type TimeStruct struct {
+	Stamp     int64   `json:"stamp"`
+	Fullstamp float64 `json:"fullstamp"`
+	String    string  `json:"string"`
+}
+
+func currentTimeText(time time.Time) string {
+	if time.Minute() >= 30 {
+		return fmt.Sprintf("half past %d", time.Hour())
+	} else {
+		return fmt.Sprintf("%d O'clock", time.Hour())
+	}
+}
+
+// TODO: Make these functions do the actual response writing too
+func currentTimeJson(currentTime time.Time) string {
+	payload := TimeStruct{
+		Stamp:     currentTime.Unix(),
+		Fullstamp: (float64(currentTime.UnixNano()) / 1.0E9),
+		String:    currentTime.Format(time.RFC3339),
+	}
+
+	body, err := json.Marshal(payload)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return string(body)
 }
 
 func main() {
 	router := httprouter.New()
-	router.GET("/api/current-time", currentTime)
+	router.GET("/api/current-time.txt", currentTimeApiText)
+	router.GET("/api/current-time.json", currentTimeApiJson)
+	router.GET("/api/current-time", currentTimeApi)
 
 	port := os.Getenv("PORT")
 	if len(port) == 0 {

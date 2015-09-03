@@ -4,20 +4,38 @@ require "sinatra"
 
 set :port, ENV.fetch("PORT", 3000)
 
-get "/api/current-time", provides: "text" do
+def time_text
   time = Time.now
-  body = (time.min >= 30 ? "half past #{time.hour}" : "#{time.hour} O'clock")
-  [200, [body]]
+  (time.min >= 30 ? "half past #{time.hour}" : "#{time.hour} O'clock")
 end
 
-get "/api/current-time", provides: "json" do
+def time_json
   time = Time.now
-  body = {
+  {
     stamp: time.to_i,
     fullstamp: time.to_f,
     string: time.iso8601,
-  }
-  [200, [body.to_json]]
+  }.to_json
+end
+
+get "/api/current-time", provides: "text" do
+  mime_type :text
+  time_text
+end
+
+get "/api/current-time", provides: "json" do
+  mime_type :json
+  time_json
+end
+
+get "/api/current-time.json" do
+  mime_type :json
+  time_json
+end
+
+get "/api/current-time.txt" do
+  mime_type :text
+  time_text
 end
 
 get "*" do
