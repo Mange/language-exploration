@@ -1,12 +1,31 @@
 require "fileutils"
-require "shellwords"
 
-file "go/server.go"
+### Go ###
+namespace :go do
+  task :deps do
+    `cd go && go get -v ./...`
+  end
 
-task :godeps do
-  `cd go && go get -v ./...`
+  task :build => ["go/server.go", :deps] do
+    `cd go && go build -o server server.go`
+  end
 end
 
-task :go => ["go/server.go", :godeps] do
-  `cd go && go build -o server server.go`
+### Ruby ###
+namespace :ruby do
+  file "ruby/Gemfile.lock" => "ruby/Gemfile" do
+    `cd ruby && bundle install`
+  end
+
+  task :deps => ["ruby/Gemfile.lock"]
+
+  task :build do
+    # Nothing to compile
+  end
 end
+
+### Basics ###
+multitask deps: [:"ruby:deps", :"go:deps"]
+multitask build: [:deps, :"ruby:build", :"go:build"]
+
+task default: :build
