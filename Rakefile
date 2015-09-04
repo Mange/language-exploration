@@ -14,14 +14,14 @@ GODEPS = [
 
 namespace :go do
   file "go/server" => ["go/server.go"] do
-    `cd go && go build -o server server.go`
+    system('cd go && go build -o server server.go')
   end
 
   GODEPS.each do |dependency|
     path = File.join(GOPATH, "src", dependency)
 
     directory path do
-      `go get #{dependency.shellescape}`
+      system("go get #{dependency.shellescape}")
     end
 
     file "go/server" => path
@@ -38,14 +38,14 @@ end
 
 ### Rust ###
 namespace :rust do
-  file("rust/target/debug/server" =>
+  file("rust/target/release/server" =>
       FileList["rust/Cargo.toml", "rust/src/**/*.rs"]
   ) do
-    `cd rust && cargo build`
+    system('cd rust && cargo build --release')
   end
 
-  file "rust/server" => ["rust/target/debug/server"] do
-    `cd rust && ln -fs target/debug/server server`
+  file "rust/server" => ["rust/target/release/server"] do
+    system('cd rust && ln -fs target/release/server server')
   end
 
   desc "Build the Rust server"
@@ -61,7 +61,7 @@ end
 ### Ruby ###
 namespace :ruby do
   file "ruby/Gemfile.lock" => "ruby/Gemfile" do
-    `cd ruby && bundle install`
+    system('cd ruby && bundle install')
   end
 
   desc "Install the Ruby dependencies"
