@@ -12,6 +12,11 @@ GODEPS = [
   "github.com/julienschmidt/httprouter".freeze,
 ].freeze
 
+def system(*args)
+  puts ">> #{args.join(" ")}"
+  super
+end
+
 namespace :go do
   file "go/server" => ["go/server.go"] do
     system('cd go && go build -o server server.go')
