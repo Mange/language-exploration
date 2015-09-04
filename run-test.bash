@@ -7,11 +7,32 @@ if [[ $# != 1 ]]; then
 fi
 
 port=$1
+url="http://localhost:${port}/api/current-time"
 
-curl -H "Accept: text/plain" http://localhost:${port}/api/current-time
+header() {
+  printf "\033[34m%25s: %s\033[0m" "$@"
+}
+
+header "JSON extension"
+curl ${url}.json
 echo ""
-curl -H "Accept: application/json" http://localhost:${port}/api/current-time
+
+header "TXT extension"
+curl ${url}.txt
 echo ""
-curl http://localhost:${port}/api/current-time.json
+
+header "Accept TXT"
+curl -H "Accept: text/plain" $url
 echo ""
-curl http://localhost:${port}/api/current-time.txt
+
+header "Accept JSON"
+curl -H "Accept: application/json" $url
+echo ""
+
+header "Accept any (expect TXT)"
+curl -H "Accept: */*" $url
+echo ""
+
+header "No Header (expect TXT)"
+curl $url
+echo ""
