@@ -11,6 +11,26 @@ namespace :go do
   end
 end
 
+### Rust ###
+namespace :rust do
+  task :deps do
+    # Handled in the build step instead
+  end
+
+  file(
+    "rust/target/debug/server" =>
+      FileList["rust/Cargo.toml", "rust/src/**/*.rs"]
+  ) do
+    `cd rust && cargo build`
+  end
+
+  file "rust/server" => ["rust/target/debug/server"] do
+    `cd rust && ([ -e server ] || ln target/debug/server server)`
+  end
+
+  task build: ["rust/server"]
+end
+
 ### Ruby ###
 namespace :ruby do
   file "ruby/Gemfile.lock" => "ruby/Gemfile" do
@@ -19,13 +39,13 @@ namespace :ruby do
 
   task :deps => ["ruby/Gemfile.lock"]
 
-  task :build do
+  task build: [:deps] do
     # Nothing to compile
   end
 end
 
 ### Basics ###
-multitask deps: [:"ruby:deps", :"go:deps"]
-multitask build: [:deps, :"ruby:build", :"go:build"]
+multitask deps: [:"ruby:deps", :"go:deps", :"rust:deps"]
+multitask build: [:deps, :"ruby:build", :"go:build", :"rust:deps"]
 
 task default: :build
