@@ -77,7 +77,7 @@ multitask build: [:"ruby:build", :"go:build", :"rust:build"]
 
 desc "Run tests"
 task :test do
-  system('./validate_all.bash')
+  system('./script/validate_all.bash')
 end
 
 task default: :build

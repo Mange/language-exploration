@@ -37,12 +37,12 @@ start_server "ruby" 3003
 sleep 1
 
 header "Testing Go"
-time ./run-test.bash 3001
+time ./script/run_test.bash 3001
 
 header "Testing Rust"
-time ./run-test.bash 3002
+time ./script/run_test.bash 3002
 
 header "Testing Ruby"
-time ./run-test.bash 3003
+time ./script/run_test.bash 3003
 
 stop_all_servers
