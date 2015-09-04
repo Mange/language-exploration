@@ -100,5 +100,5 @@ fn main() {
     );
 
     println!("Starting server on port {}", port);
-    Iron::new(router).http(("localhost", port)).unwrap();
+    Iron::new(router).http(("0.0.0.0", port)).unwrap();
 }
