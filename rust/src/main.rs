@@ -9,11 +9,36 @@ use std::env;
 use iron::prelude::*;
 use iron::status;
 
+use iron::headers::{Headers, Accept};
+use iron::mime::{Mime, TopLevel, SubLevel};
+
 use rustc_serialize::Encodable;
 use rustc_serialize::json;
 
+fn preferred_mime_type(headers: &Headers, default: Mime) -> Mime {
+    match headers.get::<Accept>() {
+        Some(&Accept(ref values)) => {
+            for quality_item in values.iter() {
+                let item = quality_item.item.clone();
+                match item {
+                    Mime(TopLevel::Application, SubLevel::Json, _) => return item,
+                    Mime(TopLevel::Text, SubLevel::Plain, _) => return item,
+                    Mime(TopLevel::Star, _, _) => return default,
+                    Mime(_, _, _) => () // Do nothing
+                }
+            }
+            return default
+        },
+        None => default
+    }
+}
+
 fn current_time_negotation(req: &mut Request) -> IronResult<Response> {
-    current_time_text(req)
+    let preferred = preferred_mime_type(&req.headers, Mime(TopLevel::Text, SubLevel::Plain, vec![]));
+    match preferred {
+        Mime(TopLevel::Application, SubLevel::Json, _) => current_time_json(req),
+        _ => current_time_text(req)
+    }
 }
 
 fn current_time_text(_: &mut Request) -> IronResult<Response> {
