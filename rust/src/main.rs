@@ -51,7 +51,11 @@ fn current_time_text(_: &mut Request) -> IronResult<Response> {
     };
 
     Ok(Response::with(
-            (status::Ok, message)
+            (
+                status::Ok,
+                message,
+                Mime(TopLevel::Text, SubLevel::Plain, vec![])
+            )
     ))
 }
 
@@ -73,7 +77,11 @@ fn current_time_json(_: &mut Request) -> IronResult<Response> {
     };
 
     Ok(Response::with(
-            (status::Ok, json::encode(&payload).ok().expect("Could not encode JSON"))
+            (
+                status::Ok,
+                json::encode(&payload).ok().expect("Could not encode JSON"),
+                Mime(TopLevel::Application, SubLevel::Json, vec![])
+            )
     ))
 }
 
