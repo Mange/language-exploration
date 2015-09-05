@@ -31,6 +31,7 @@ trap "stop_all_servers" EXIT
 start_server "go" 3001
 start_server "rust" 3002
 start_server "ruby" 3003
+start_server "node" 3004
 sleep 2
 
 echo ""
@@ -46,6 +47,9 @@ benchmark 3002 Rust txt
 
 benchmark 3003 Ruby json
 benchmark 3003 Ruby txt
+
+benchmark 3004 Node json
+benchmark 3004 Node txt
 
 header "--------------------"
 header "Full output in ${output_file}"

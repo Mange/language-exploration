@@ -10,7 +10,7 @@ I'm a total n00b in both Go and Rust, so don't expect any magic in here.
 
 Run `rake` to install everything and `rake test` to verify that the different implementations work correctly.
 
-You will need to install `rust`, `ruby` and `go`.
+You will need to install `rust`, `ruby`, `go` and `node.js`.
 
 ### rust ###
 
@@ -31,6 +31,10 @@ export GOPATH="$HOME/gopath"
 ### Ruby ###
 
 Make sure you are on a recent Ruby and that you have `bundler` installed. The `rake` tasks take care of the rest.
+
+### node ###
+
+Make sure you have `node` and `npm` installed.
 
 ## Service definition ##
 

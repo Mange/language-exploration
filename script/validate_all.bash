@@ -8,6 +8,7 @@ trap "stop_all_servers" ERR
 start_server "go" 3001
 start_server "rust" 3002
 start_server "ruby" 3003
+start_server "node" 3004
 sleep 1
 
 header "Testing Go"
@@ -18,5 +19,8 @@ time ./script/run_test.bash 3002
 
 header "Testing Ruby"
 time ./script/run_test.bash 3003
+
+header "Testing Node"
+time ./script/run_test.bash 3004
 
 stop_all_servers

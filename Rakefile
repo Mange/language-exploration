@@ -73,12 +73,21 @@ namespace :ruby do
   task build: ["ruby/Gemfile.lock"]
 end
 
+### Node ###
+namespace :node do
+  directory "node/node_modules" do
+    system("cd node && npm install")
+  end
+
+  task build: "node/node_modules"
+end
+
 ### Basics ###
 desc "Clean out all generated files"
 multitask clean: [:"go:clean", :"rust:clean"]
 
 desc "Build all servers (default)"
-multitask build: [:"ruby:build", :"go:build", :"rust:build"]
+multitask build: [:"ruby:build", :"go:build", :"rust:build", :"node:build"]
 
 desc "Run tests"
 task :test do
