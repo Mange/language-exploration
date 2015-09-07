@@ -72,7 +72,7 @@ fn current_time_json(_: &mut Request) -> IronResult<Response> {
 
     let payload = TimeData {
         stamp: timespec.sec,
-        fullstamp: (timespec.sec as f64 + (timespec.nsec as f64 / 10.0e9)),
+        fullstamp: (timespec.sec as f64 + (timespec.nsec as f64 / 1.0e9)),
         string: now.rfc3339().to_string(),
     };
 

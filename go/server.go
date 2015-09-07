@@ -74,7 +74,6 @@ func currentTimeText(time time.Time) string {
 	}
 }
 
-// TODO: Make these functions do the actual response writing too
 func currentTimeJson(currentTime time.Time) string {
 	payload := TimeStruct{
 		Stamp:     currentTime.Unix(),
