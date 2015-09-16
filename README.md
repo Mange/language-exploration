@@ -36,6 +36,15 @@ Make sure you are on a recent Ruby and that you have `bundler` installed. The `r
 
 Make sure you have `node` and `npm` installed.
 
+### Crystal ###
+
+Install crystal and run `crystal/server`.
+
+To compile a binary run
+```
+$ crystal build crystal/server.cr --release
+```
+
 ## Service definition ##
 
 Create a service with the following API:
