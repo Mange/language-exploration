@@ -32,6 +32,7 @@ start_server "go" 3001
 start_server "rust" 3002
 start_server "ruby" 3003
 start_server "node" 3004
+start_server "crystal" 3005
 sleep 2
 
 echo ""
@@ -50,6 +51,9 @@ benchmark 3003 Ruby txt
 
 benchmark 3004 Node json
 benchmark 3004 Node txt
+
+benchmark 3005 Crystal json
+benchmark 3005 Crystal text
 
 header "--------------------"
 header "Full output in ${output_file}"
