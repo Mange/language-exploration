@@ -82,12 +82,27 @@ namespace :node do
   task build: "node/node_modules"
 end
 
+### Crystal ###
+namespace :crystal do
+  file "crystal/server" do
+    system("cd crystal && crystal build server.cr --release")
+  end
+
+  desc "Build the Crystal server"
+  task build: "crystal/server"
+
+  task :clean do
+    FileUtils.rm_rf "crystal/.crystal"
+    FileUtils.rm_rf "crystal/server"
+  end
+end
+
 ### Basics ###
 desc "Clean out all generated files"
-multitask clean: [:"go:clean", :"rust:clean"]
+multitask clean: [:"go:clean", :"rust:clean", :"crystal:clean"]
 
 desc "Build all servers (default)"
-multitask build: [:"ruby:build", :"go:build", :"rust:build", :"node:build"]
+multitask build: [:"ruby:build", :"go:build", :"rust:build", :"node:build", :"crystal:build"]
 
 desc "Run tests"
 task :test do

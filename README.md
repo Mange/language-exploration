@@ -10,7 +10,7 @@ I'm a total n00b in both Go and Rust, so don't expect any magic in here.
 
 Run `rake` to install everything and `rake test` to verify that the different implementations work correctly.
 
-You will need to install `rust`, `ruby`, `go` and `node.js`.
+You will need to install `rust`, `ruby`, `go`, `node.js` and `crystal`.
 
 ### rust ###
 
@@ -35,6 +35,10 @@ Make sure you are on a recent Ruby and that you have `bundler` installed. The `r
 ### node ###
 
 Make sure you have `node` and `npm` installed.
+
+### Crystal ###
+
+Install crystal. Can use `brew install crystal` if on osx
 
 ## Service definition ##
 
